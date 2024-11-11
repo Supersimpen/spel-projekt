@@ -1,5 +1,5 @@
 export default class GameObject {
-    constructor(width, height, x, y, color){
+    constructor(x, y, width, height, color){
         this.width = width
         this.height = height
         this.x = x
