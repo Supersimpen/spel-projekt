@@ -6,12 +6,11 @@ export default class Player extends GameObject {
     this.game = game
 
     this.image = new Image ()
-    this.image.src = "./src/assets/IDLE.png"
-    this.image2 = new Image ()
-    this.image2.src = "./src/assets/RUN.png"
+    this.image.src = "./src/assets/DinoSprites - doux.png"
 
-    this.frameWidth = 96
-    this.frameHeight = 100
+
+    this.frameWidth = 24
+    this.frameHeight = 24
     this.frameX = 0
     this.frameY = 0
     this.maxFrames = 10
@@ -26,11 +25,12 @@ export default class Player extends GameObject {
 
   update (deltaTime) {
     if (this.game.input.keys.has("ArrowLeft")) {
-      console.log("pil vänster")
       this.speedX -= this.maxSpeedX
+      this.flip = true
     }
     if (this.game.input.keys.has("ArrowRight")) {
       this.speedX += this.maxSpeedX
+      this.flip = false
     }
     if (this.game.input.keys.has("ArrowRight") && this.game.input.keys.has("ArrowLeft")) {
       this.speedX = 0
@@ -56,11 +56,11 @@ export default class Player extends GameObject {
     this.x += this.speedX
 
     if (this.speedX != 0) {
-      this.frameY = 3
-      this.maxFrames = 9
+      this.frameY = 0
+      this.maxFrames = 10
     } else {
       this.frameY = 0
-      this.maxFrames = 7
+      this.maxFrames = 1
     }
     if (this.timer > this.interval) {
       this.frameX++
@@ -71,11 +71,24 @@ export default class Player extends GameObject {
     if (this.frameX >= this.maxFrames) {
       this.frameX = 0
     }
+
+    if (this.x < 30){
+      this.x = 30
+      this.speedX = 0
+    }
+    if (this.x > 800){
+      this.x = 800
+      this.speedX = 0
+    }
   
   }
   
 
   draw(ctx){
+    if (this.flip){
+      ctx.save()
+      ctx.scale(-1, 1)
+    }
     //ctx.drawImage(this.image, this.x, this.y, this.width, this.height)
     ctx.drawImage(
       this.image,
@@ -83,10 +96,13 @@ export default class Player extends GameObject {
       this.frameHeight * this.frameY,
       this.frameWidth,
       this.frameHeight,
-      this.x,
+      this.flip ? this.x * -1 - this.width : this.x,
       this.y,
       this.width * 3,
       this.height * 3,
     )
+    if (this.flip){
+      ctx.restore()
+    }
   }
 }
