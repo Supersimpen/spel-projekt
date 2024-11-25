@@ -5,7 +5,7 @@ export default class Player extends GameObject {
     super(x, y, width, height, color)
     this.game = game
 
-    this.image = new Image ()
+    this.image = new Image()
     this.image.src = "./src/assets/DinoSprites - doux.png"
 
 
@@ -21,9 +21,10 @@ export default class Player extends GameObject {
     this.speedX = 0
     this.speedY = 0
     this.maxSpeedX = 0.2
+    this.jumpspeed = 20
   }
 
-  update (deltaTime) {
+  update(deltaTime) {
     if (this.game.input.keys.has("ArrowLeft")) {
       this.speedX -= this.maxSpeedX
       this.flip = true
@@ -36,16 +37,19 @@ export default class Player extends GameObject {
       this.speedX = 0
     }
     if (!this.game.input.keys.has("ArrowRight") && !this.game.input.keys.has("ArrowLeft")) {
-        this.speedX -= this.speedX
-      }
-
-    if (this.game.input.keys.has("ArrowUp")) {
-      this.speedY -= this.maxSpeedY
+      this.speedX -= this.speedX
     }
 
-    
+    if (this.game.input.keys.has("ArrowUp")) {
+      this.speedY -= this.jumpspeed
+      console.log(this.speedY)
+    }
 
-    console.log(this.y)
+    this.y += this.speedY
+    this.x += this.speedX
+
+
+
     if (this.y > 320) {
       this.speedY = 0
     } else {
@@ -72,20 +76,20 @@ export default class Player extends GameObject {
       this.frameX = 0
     }
 
-    if (this.x < 30){
+    if (this.x < 30) {
       this.x = 30
       this.speedX = 0
     }
-    if (this.x > 800){
+    if (this.x > 800) {
       this.x = 800
       this.speedX = 0
     }
-  
-  }
-  
 
-  draw(ctx){
-    if (this.flip){
+  }
+
+
+  draw(ctx) {
+    if (this.flip) {
       ctx.save()
       ctx.scale(-1, 1)
     }
@@ -98,10 +102,10 @@ export default class Player extends GameObject {
       this.frameHeight,
       this.flip ? this.x * -1 - this.width : this.x,
       this.y,
-      this.width * 3,
-      this.height * 3,
+      this.width,
+      this.height,
     )
-    if (this.flip){
+    if (this.flip) {
       ctx.restore()
     }
   }
